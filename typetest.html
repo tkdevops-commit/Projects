@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Typing Game</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <div class="banner-top">
+        <h1 class="title">Type Test</h1>
+        <button id="rulesButton">Instructions</button>
+        <div id="instructionsBox" class="instructions-box">
+            <p>1. Follow the rules carefully.</p>
+            <p>2. Press any key to start the game.</p>
+            <p>3. You have 60 seconds to type as many words as possible.</p>
+            <p>4. You can make corrections within the line.</p>
+            <p>5. Aim to minimise mistakes.</p>
+            <p>6. After the timer stops you will not be able to type.</p>
+            <p>7. At the end of the round calculate the score by subtracting mistakes tally from WPM.</p>
+        </div>
+    </div>   
+    <div class="wrapper">
+        <input type="text" class="input-field">
+        <div class="content-box">
+            <div class="typing-text">
+                <p id="paragraph"></p>
+            </div>
+            <div class="content">
+                <ul class="result-details">
+                    <li class="time">
+                        <p>
+                            Time Left:
+                        </p>
+                        <span><b>60</b>s</span>
+                    </li>
+                    <li class="mistake">
+                        <p>
+                            Mistakes:
+                        </p>
+                        <span>0</span>
+                    </li>
+                    <li class="wpm">
+                        <p>
+                            WPM:
+                        </p>
+                        <span>0</span>
+                    </li>
+                    <li class="cpm">
+                        <p>
+                            CPM:
+                        </p>
+                        <span>0</span>
+                    </li>
+                </ul>
+                <button>Try Again</button>
+            </div>
+        </div>
+    </div>
+<script>
+const paragraphs = [
+    "the be to of and a in that have i it for not on with he as you do at this but his by from they we say her she or an will my one all would there their what so up out if about who get which go me when make can like time no just him know take people into year your good some could them see other than then now look only come its over think also back after use two how our work first well way even new want because any these give day most us",
+     ];
+
+const typingText = document.querySelector(".typing-text p")
+const inpField = document.querySelector(".wrapper .input-field")
+const tryAgainBtn = document.querySelector(".content button")
+const timeTag = document.querySelector(".time span b")
+const mistakeTag = document.querySelector(".mistake span")
+const wpmTag = document.querySelector(".wpm span")
+const cpmTag = document.querySelector(".cpm span")
+
+let timer;
+let maxTime = 60;
+let timeLeft = maxTime;
+let charIndex = mistakes = isTyping = 0;
+
+function loadParagraph() {
+    const ranIndex = Math.floor(Math.random() * paragraphs.length);
+    typingText.innerHTML = "";
+    paragraphs[ranIndex].split("").forEach(char => {
+        console.log(char);
+        let span = `<span>${char}</span>`
+        typingText.innerHTML += span;
+    });
+    typingText.querySelectorAll("span")[0].classList.add("active");
+    document.addEventListener("keydown", () => inpField.focus());
+    typingText.addEventListener("click", () => inpField.focus());
+}
+
+function initTyping() {
+    let characters = typingText.querySelectorAll("span");
+    let typedChar = inpField.value.split("")[charIndex];
+    if (charIndex < characters.length - 1 && timeLeft > 0) {
+        if (!isTyping) {
+            timer = setInterval(initTimer, 1000);
+            isTyping = true;
+        }
+        if (typedChar == null) {
+            if (charIndex > 0) {
+                charIndex--;
+                if (characters[charIndex].classList.contains("incorrect")) {
+                    mistakes--;
+                }
+                characters[charIndex].classList.remove("correct", "incorrect");
+            }
+        } else {
+            if (characters[charIndex].innerText == typedChar) {
+                characters[charIndex].classList.add("correct");
+            } else {
+                mistakes++;
+                characters[charIndex].classList.add("incorrect");
+            }
+            charIndex++;
+        }
+        characters.forEach(span => span.classList.remove("active"));
+        characters[charIndex].classList.add("active");
+
+        let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
+        wpm = wpm < 0 || !wpm || wpm === Infinity ? 0: wpm;
+
+        wpmTag.innerText = wpm;
+        mistakeTag.innerText = mistakes;
+        cpmTag.innerText = charIndex - mistakes;
+    } else {
+        clearInterval(timer);
+        inpField.value = "";
+    }
+}
+
+function initTimer() {
+    if (timeLeft > 0) {
+        timeLeft--;
+        timeTag.innerText = timeLeft;
+        let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
+        wpmTag.innerText = wpm;
+    } else {
+        clearInterval(timer);
+    }
+}
+
+function resetGame() {
+    loadParagraph();
+    clearInterval(timer);
+    timeLeft = maxTime;
+    charIndex = mistakes = isTyping = 0;
+    inpField.value = "";
+    timeTag.innerText = timeLeft;
+    wpmTag.innerText = 0;
+    mistakeTag.innerText = 0;
+    cpmTag.innerText = 0;
+}
+
+loadParagraph();
+inpField.addEventListener("input", initTyping);
+tryAgainBtn.addEventListener("click", resetGame);
+
+function showInstructions(optionValue) {
+    const instructionsDiv = document.getElementById('instructions');
+
+    if (optionValue === 'show') {
+        instructionsDiv.style.display = 'block';
+    } else {
+        instructionsDiv.style.display = 'none';
+    }
+}
+
+const rulesButton = document.getElementById('rulesButton');
+const instructionsBox = document.getElementById('instructionsBox');
+
+rulesButton.addEventListener('click', toggleInstructions);
+
+function toggleInstructions() {
+    if (instructionsBox.style.display === 'none') {
+        instructionsBox.style.display = 'block';
+    } else {
+        instructionsBox.style.display = 'none';
+    }
+}
+</script>
+</body>
+
+</html>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body {
+    display: flex;
+    padding: 0 10px;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(112.1deg, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
+}
+.banner-top {
+    background-color: linear-gradient(112.1deg, rgb(255, 255, 255) 11.4%, rgb(255, 255, 255) 70.2%);;
+    color: #000000;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    margin: 0;
+    color: white;
+}
+
+.instructions-box {
+    display: none;
+    margin-top: 300px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    right: 200px;
+}
+
+button {
+    padding: 8px 12px;
+    font-size: 16px;
+    cursor: pointer;
+}
+   
+#paragraph{
+    color: #646669;
+}
+.result-details{
+    color: white;
+}
+::selection {
+    color: #fff;
+    background: #007acc;
+}
+.wrapper {
+    width: 1200px;
+    padding: 35px;
+    background: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+}
+.wrapper .input-field {
+    opacity: 0;
+    z-index: -999;
+    position: absolute;
+}
+.wrapper .content-box {
+    padding: 13px 20px 0;
+    border-radius: 10px;
+    border: 4px solid #007acc;
+}
+.content-box .typing-text {
+    overflow: hidden;
+    max-height: 256px;
+}
+.typing-text::-webkit-scrollbar {
+    width: 0;
+}
+.typing-text p {
+    font-size: 21px;
+    text-align: justify;
+    letter-spacing: 1px;
+    word-break: break-all;
+}
+.typing-text p span {
+    position: relative;
+}
+.typing-text p span.correct {
+    color: #d1d0c5;
+}
+.typing-text p span.incorrect {
+    color: #ca4754;
+    border-radius: 4px;
+}
+
+.typing-text p span.active::before {
+    position: absolute;
+    content: "";
+    height: 2px;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    border-radius: 5px;
+    background: #007acc;
+    animation: blink 1s ease-in-out infinite;
+}
+@keyframes blink {
+    50% {
+        opacity: 1;
+    }
+}
+.content-box .content {
+    margin-top: 17px;
+    display: flex;
+    padding: 12px 0;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 3px solid #007acc;
+    opacity: .8;
+}
+.content button {
+    outline: none;
+    border: none;
+    width: 105px;
+    color: #007acc;
+    padding: 8px 0;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 15px;
+    border: 3px solid #007acc;
+    background: none;
+    transition: transform 0.2s ease;
+}
+.content button:active {
+    transform: scale(0.89);
+}
+.content button:hover {
+    background: #FFFFFF;
+}
+.content .result-details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: calc(100% - 140px);
+    justify-content: space-between;
+}
+.result-details li {
+    display: flex;
+    height: 20px;
+    list-style: none;
+    position: relative;
+    align-items: center;
+}
+.result-details li:not(:first-child) {
+    padding-left: 22px;
+    border-left: 2px solid #bfbfbf;
+}
+.result-details li p {
+    font-size: 13px;
+}
+.result-details li span {
+    display: block;
+    font-size: 13px;
+    margin-left: 10px;
+}
+li span b {
+    font-weight: 500;
+}
+li:not(:first-child) span {
+    font-weight: 500;
+}
+@media (max-width: 745px) {
+    .wrapper {
+        padding: 20px;
+    }
+    .content-box .content {
+        padding: 20px 0;
+    }
+    .content-box .typing-text {
+        max-height: 100%;
+    }
+    .typing-text p {
+        font-size: 19px;
+        text-align: left;
+    }
+    .content button {
+        width: 100%;
+        font-size: 15px;
+        padding: 10px 0;
+        margin-top: 20px;
+    }
+    .content .result-details {
+        width: 100%;
+    }
+    .result-details li:not(:first-child) {
+        border-left: 0;
+        padding: 0;
+    }
+    .result-details li p,
+    .result-details li span {
+        font-size: 15px;
+    }
+}
+@media (max-width: 518px) {
+    .wrapper .content-box {
+        padding: 10px 15px 0;
+    }
+    .typing-text p {
+        font-size: 13px;
+    }
+    .result-details li {
+        margin-bottom: 10px;
+    }
+    .content button {
+        margin-top: 10px;
+    }
+}
+footer {
+    background-color: #000000;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+</style>
