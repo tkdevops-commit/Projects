@@ -1,3 +1,7 @@
+![JavaScript](https://img.shields.io/badge/JavaScript-yellow)
+![HTML](https://img.shields.io/badge/HTML-orange)
+![CSS](https://img.shields.io/badge/CSS-blue)
+
 Speed Typing Game
 
 Description
