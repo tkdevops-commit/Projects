@@ -50,21 +50,8 @@ The CSS file contains styles to make the game visually appealing and user-friend
 
 JavaScript
 
-The JavaScript code handles the game logic, including:
+The JavaScript code handles the game logic.
 
-	•	Loading Paragraphs: Randomly selecting a paragraph for the typing test.
-	•	Typing Logic: Tracking the typed characters, counting mistakes, and updating WPM and CPM.
-	•	Timer: Managing the countdown timer.
-	•	Reset Functionality: Resetting the game to its initial state for a new round.
-
-Future Enhancements
-
-	•	Multiple Paragraphs: Adding more paragraphs to increase the variety of typing tests.
-	•	Leaderboard: Implementing a leaderboard to track high scores.
-	•	Custom Timer: Allowing users to set a custom timer for the typing test.
-	•	Mobile Optimization: Further optimizing the game for mobile devices.
-
-License
 
 This project is open-source and available for free use and modification. Feel free to contribute to the project by submitting pull requests or suggesting features.
 
