@@ -6,4 +6,4 @@ Speed Typing Game
 
 Description
 
-The Speed Typing Game is a web-based application designed to help users improve their typing speed and accuracy. The goal of the game is to type as many words as possible within 60 seconds while minimizing mistakes. The game provides real-time feedback on typing speed, mistakes, and characters per minute
+The Speed Typing Game is a web-based application designed to help users improve their typing speed and accuracy. The goal of the game is to type as many words as possible within 60 seconds while minimizing mistakes. The game provides real-time feedback on typing speed, mistakes, and characters per minute.
